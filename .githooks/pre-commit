@@ -1,4 +1,4 @@
+#!/usr/bin/env bash
 
-
-
-
+# NOTE: this will include un-staged files
+npm run ts:validate

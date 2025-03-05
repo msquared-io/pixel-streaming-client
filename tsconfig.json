@@ -1,26 +1,26 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+{
+  "include": ["src/**/*"],
+  "compilerOptions": {
+    "outDir": "./dist",
+    "tsBuildInfoFile": ".tsbuildinfo",
+    "incremental": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "esnext",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    // strictness
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    // we're using a bundler
+    "module": "preserve",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationMap": true,
+    // this is a browser SDK
+    "lib": ["esnext", "dom", "dom.iterable"]
+  }
+}

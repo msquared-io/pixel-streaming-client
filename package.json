@@ -1,69 +1,69 @@
-
-
+{
+  "name": "@msquared/pixel-streaming-client",
   "version": "0.5.2",
-
-
-
-
-
-
-
-
-
-
-
-
+  "description": "Browser client for viewing pixel-streamed content from MSquared events",
+  "homepage": "https://msquared.io",
+  "license": "MIT",
+  "keywords": [
+    "msquared",
+    "pixel-streaming"
+  ],
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "run-p build:*",
     "build:cjs": "esbuild ./src/index.ts ./src/errors.ts --outdir=./dist/cjs --platform=node --bundle --external:react",
     "build:esm": "esbuild ./src/index.ts ./src/errors.ts --outdir=./dist/esm --platform=neutral --bundle --main-fields=main --external:react",
     "build:script": "esbuild ./src/index.ts --outdir=./dist/script --platform=browser --bundle --minify --target=es6 --format=iife --global-name=MSquaredPixelStreamingClient --external:react",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    "build:types": "tsc --declarationDir ./dist/types",
+    "clean": "rm -rf ./dist",
+    "prepare": "git config core.hooksPath .githooks",
+    "prepublishOnly": "run-s ts:validate",
+    "test": "jest",
+    "ts:check": "biome check",
+    "ts:check:fix": "biome check --write",
+    "ts:depcheck": "depcheck",
+    "ts:fmt": "biome format",
+    "ts:fmt:fix": "biome format --write",
+    "ts:lint": "biome lint",
+    "ts:lint:fix": "biome lint --write",
+    "ts:type-check": "tsc --incremental --pretty --noEmit",
+    "ts:validate": "run-s ts:type-check ts:check ts:depcheck test"
+  },
+  "main": "./dist/script/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    },
+    "./errors": {
+      "types": "./dist/types/errors.d.ts",
+      "import": "./dist/esm/errors.js",
+      "require": "./dist/cjs/errors.js"
+    }
+  },
+  "dependencies": {
+    "ua-parser-js": "^1.0.40",
+    "uuidv7": "^1.0.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@commitlint/cli": "^19.6.1",
+    "@commitlint/config-conventional": "^19.6.0",
+    "@types/jest": "^29.5.14",
     "@types/react": "^18",
-
-
-
-
-
+    "@types/ua-parser-js": "^0.7.39",
+    "depcheck": "^1.4.7",
+    "esbuild": "^0.24.2",
+    "jest": "^29.7.0",
+    "npm-run-all": "^4.1.5",
     "react": "^18.0.0",
-
-
-
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.7.3"
+  },
   "peerDependencies": {
     "react": "^18.0.0"
   },
@@ -72,9 +72,9 @@
       "optional": true
     }
   },
-
-
-
-
-
-
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  }
+}
