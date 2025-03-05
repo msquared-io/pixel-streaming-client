@@ -1,5 +1,6 @@
 
 
+  "version": "0.5.2",
 
 
 
@@ -12,6 +13,9 @@
 
 
 
+    "build:cjs": "esbuild ./src/index.ts ./src/errors.ts --outdir=./dist/cjs --platform=node --bundle --external:react",
+    "build:esm": "esbuild ./src/index.ts ./src/errors.ts --outdir=./dist/esm --platform=neutral --bundle --main-fields=main --external:react",
+    "build:script": "esbuild ./src/index.ts --outdir=./dist/script --platform=browser --bundle --minify --target=es6 --format=iife --global-name=MSquaredPixelStreamingClient --external:react",
 
 
 
@@ -50,28 +54,24 @@
 
 
 
+    "@types/react": "^18",
 
 
 
 
 
+    "react": "^18.0.0",
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  "peerDependencies": {
+    "react": "^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
 
 
 

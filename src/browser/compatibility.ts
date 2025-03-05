@@ -1,3 +1,13 @@
+import { Browser, OS, UA, getUserAgent } from "./ua"
+
+
+
+
+
+
+/* TODO This doesn't look like it matches up with the supported platforms for the geforce now SDK,
+ *  and it could be cleaned up to use the exported UA values directly rather than them being passed
+ *  as arguments
 
 
 
@@ -14,6 +24,7 @@
 
 
 
+   * Version 12 is supported but 16 is required for navigator.permissions support
 
 
 
@@ -27,20 +38,9 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    os === OS.iOS &&
+    name !== Browser.Safari &&
+    name !== Browser.SafariMobile
 
 
 

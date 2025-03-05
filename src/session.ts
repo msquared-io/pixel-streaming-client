@@ -1,4 +1,5 @@
 
+ * This is the minimal code and types needed to fetch Sessions from Morpheus Platform.
 
 
 
@@ -219,8 +220,7 @@
 
 
 
-
-
+   *  @param projectId The Project ID for the current project.
 
 
 

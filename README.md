@@ -1,15 +1,15 @@
 
 
 
+[![Build Status](https://github.com/msquared-io/pixel-streaming-client/actions/workflows/main.yaml/badge.svg)](https://github.com/msquared-io/pixel-streaming-client/actions/workflows/main.yaml)
 
 
 
 
 
+## Usage
 
-
-
-
+For detailed documentation please visit our [docs site](https://docs.msquared.io/apis-and-tooling/frontend-sdks/pixel-streaming).
 
 
 

@@ -10,6 +10,7 @@
 
 
 
+import { SessionClient, type SessionState, type StreamConfig } from "./session"
 
 
 
@@ -62,6 +63,7 @@
 
 
 
+  /** Morpheus Platform API credentials */
 
 
 
@@ -130,9 +132,17 @@
 
 
 
+ * Configuration required to initiate a stream
 
+export type StartStreamConfig = {
 
+  config?: StreamConfig
+}
 
+/**
+ * Stream configuration options
+ */
+export type StartOptions = StartStreamConfig & ProviderOpts & TargetOpts
 
 
 
@@ -283,6 +293,7 @@
 
 
 
+      host: opts.server?.host ?? `${opts.auth.organizationId}.m2worlds.io`,
 
 
 
@@ -304,22 +315,11 @@
 
 
 
+    worldId: string
 
+  }): Promise<StartStreamConfig> {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    const streamId = uuidv7()
 
 
 

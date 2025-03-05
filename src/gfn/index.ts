@@ -1,5 +1,7 @@
 
 
+import type { API } from "./types"
+import type { ServerInfo } from "./types"
 
 
 
@@ -28,6 +30,7 @@
 
 
 
+    public reason: number,
 
 
 
@@ -67,6 +70,7 @@
 
 
 
+    // TODO allow this behaviour to be customised, ideally by specifing a GFN `StreamProfilePreset`, or a (constrained) custom resolution.
 
 
 
@@ -121,11 +125,7 @@
 
 
 
-
-
-
-
-
+    // TODO: Should we stop and invalidate any existing clients that were handed out with an out of date config, rather than returning an error here.
 
 
 
