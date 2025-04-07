@@ -49,6 +49,67 @@ describe("errors.wrap", () => {
   })
 })
 
+describe("errors.as", () => {
+  class CustomError extends Error {}
+  class ChildError extends CustomError {}
+  class AnotherError extends Error {}
+
+  it("should return the error if it matches the target type", () => {
+    const error = new CustomError()
+    const result = errors.as(error, CustomError)
+    expect(result).toBe(error)
+  })
+
+  it("should return undefined if the error doesn't match the target type", () => {
+    const error = new Error()
+    const result = errors.as(error, CustomError)
+    expect(result).toBeUndefined()
+  })
+
+  it("should handle subclasses correctly", () => {
+    const error = new ChildError()
+    const result = errors.as(error, CustomError)
+    expect(result).toBe(error)
+  })
+
+  it("should return undefined for non-error values", () => {
+    const result = errors.as("not an error", CustomError)
+    expect(result).toBeUndefined()
+  })
+
+  it("should find matching error in the cause chain", () => {
+    const customError = new CustomError()
+    const error = new Error("wrapper", { cause: customError })
+    const result = errors.as(error, CustomError)
+    expect(result).toBe(customError)
+  })
+
+  it("should find matching error in a deep cause chain", () => {
+    const customError = new CustomError()
+    const level3 = new Error("level 3", { cause: customError })
+    const level2 = new Error("level 2", { cause: level3 })
+    const level1 = new Error("level 1", { cause: level2 })
+
+    const result = errors.as(level1, CustomError)
+    expect(result).toBe(customError)
+  })
+
+  it("should return undefined if no matching error is found in the chain", () => {
+    const level3 = new Error("level 3")
+    const level2 = new Error("level 2", { cause: level3 })
+    const level1 = new Error("level 1", { cause: level2 })
+
+    const result = errors.as(level1, CustomError)
+    expect(result).toBeUndefined()
+  })
+
+  it("should handle cause being non-error values", () => {
+    const error = new Error("wrapper", { cause: "string cause" })
+    const result = errors.as(error, CustomError)
+    expect(result).toBeUndefined()
+  })
+})
+
 describe("errors.catch", () => {
   class CustomError extends Error {}
   class AnotherError extends Error {}

@@ -90,7 +90,7 @@ export function usePixelStreaming({
       )
       streamingClientRef.current.addEventListener("error", onErrorEvent)
 
-      const config = await streamingClientRef.current.fetchStreamConfig({
+      const config = await streamingClientRef.current.setup({
         projectId,
         worldId,
         forceProvider: StreamProvider.GeforceNow,
@@ -101,13 +101,25 @@ export function usePixelStreaming({
       }
 
       const streamingContainerOrError = await streamingClientRef.current.start({
-        ...(config as { streamId: string; config: GeforceStreamConfig }),
+        ...(config as {
+          streamId: string
+          config: GeforceStreamConfig
+          sessionId: string
+          projectId: string
+          worldId: string
+        }),
         provider: StreamProvider.GeforceNow,
         target: StreamTarget.Embedded,
         container: ref,
       })
 
       if (streamingContainerOrError instanceof StreamingClientError) {
+        if (config) {
+          await streamingClientRef.current.cleanup({
+            reason: streamingContainerOrError,
+            ...config,
+          })
+        }
         throw streamingContainerOrError
       }
     },
