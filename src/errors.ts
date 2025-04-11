@@ -156,4 +156,49 @@ function catch_<T, Es extends ErrorOrConstructor[]>(
   }
 }
 
-export default { is, wrap, catch: catch_ }
+/**
+ * Type-safely unwraps an error to a specific error type by traversing the error chain.
+ * Checks if the error or any of its causes (recursively) matches the target type.
+ *
+ * @template T - The specific Error type to unwrap to
+ * @template V - The type of the value being checked
+ *
+ * @param value - The error to check and unwrap
+ * @param target - Error constructor or instance to match against
+ * @returns The first error in the chain that matches the target type, or undefined if none match
+ *
+ * @example
+ * class CustomError extends Error {}
+ *
+ * try {
+ *   // ...some code that might throw
+ * } catch (err) {
+ *   const customErr = errors.as(err, CustomError)
+ *   if (customErr) {
+ *     // Handle the specific error type
+ *   }
+ * }
+ */
+function as<V, T extends ErrorOrConstructor>(
+  value: V,
+  target: T,
+): T extends Constructor<infer R> ? R : T extends Error ? T : never
+function as<V, T extends ErrorOrConstructor<V extends Error ? V : Error>>(
+  value: V,
+  target: T = Error as unknown as T,
+): Extract<V, OutputType<T>> | undefined {
+  // Check the current error
+  if (is(value, target)) {
+    return value as Extract<V, OutputType<T>>
+  }
+
+  // Check if the value is an Error and has a cause
+  if (value instanceof Error && value.cause !== undefined) {
+    // Recursively check the cause chain
+    return as(value.cause, target) as Extract<V, OutputType<T>> | undefined
+  }
+
+  return undefined
+}
+
+export default { is, wrap, catch: catch_, as }
