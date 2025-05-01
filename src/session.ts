@@ -37,6 +37,7 @@ export enum SessionState {
   // 'Active' states
   Ready = "READY", // Session is clear to join the deployment; capacity is available.
   Pending = "PENDING", // Session is awaiting a streaming slot.
+  Connecting = "CONNECTING", // Session client is connecting to the World.
   Active = "ACTIVE", // Session is connected to the deployment and/or has streaming configuration data.
 
   // 'Terminal' states
@@ -208,12 +209,16 @@ export class SessionClient {
         return
       }
 
-      if (session.state === SessionState.Active) {
+      // Check if the session is in a useable state.
+      if (
+        session.state === SessionState.Connecting ||
+        session.state === SessionState.Active
+      ) {
         if (onStateChange) {
           onStateChange(session.state)
         }
 
-        // Session is now ready!
+        // Streaming session is ready to join!
         return session
       }
 
