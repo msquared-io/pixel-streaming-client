@@ -1,7 +1,11 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
-import type { ClientOptions, StreamingClientErrorEvent } from "../client"
+import type {
+  ClientOptions,
+  SessionStateUpdatedEvent,
+  StreamingClientErrorEvent,
+} from "../client"
 import {
   StreamProvider,
   StreamState,
@@ -10,7 +14,7 @@ import {
   StreamingClient,
   StreamingClientError,
 } from "../client"
-import type { GeforceStreamConfig } from "../session"
+import type { GeforceStreamConfig, SessionState } from "../session"
 
 type StartStreamingParams = Readonly<{
   ref: HTMLElement
@@ -27,6 +31,7 @@ type UsePixelStreamingParams = Readonly<{
 
 type UsePixelStreamingResult = {
   streamState: StreamState
+  sessionState: SessionState | undefined
   startStreaming: (params: StartStreamingParams) => void
   stopStreaming: () => void
   getBrowserSupport: () => Record<StreamProvider, boolean>
@@ -40,9 +45,12 @@ export function usePixelStreaming({
   clientOptions,
 }: UsePixelStreamingParams): UsePixelStreamingResult {
   const [streamState, setStreamState] = useState<StreamState>(StreamState.Idle)
+  const [sessionState, setSessionState] = useState<SessionState | undefined>()
+
   const streamingClientRef = useRef<StreamingClient | null>(null)
   const eventHandlersRef = useRef<{
-    onStateUpdate: (event: StreamStateUpdatedEvent) => void
+    onStreamStateUpdate: (event: StreamStateUpdatedEvent) => void
+    onSessionStateUpdate: (event: SessionStateUpdatedEvent) => void
     onErrorEvent: (error: StreamingClientErrorEvent) => void
   } | null>(null)
 
@@ -74,19 +82,31 @@ export function usePixelStreaming({
 
       stopStreaming()
 
-      const onStateUpdate = (event: StreamStateUpdatedEvent) => {
+      const onStreamStateUpdate = (event: StreamStateUpdatedEvent) => {
         setStreamState(event.detail.state)
+      }
+
+      const onSessionStateUpdate = (event: SessionStateUpdatedEvent) => {
+        setSessionState(event.detail)
       }
 
       const onErrorEvent = (error: StreamingClientErrorEvent) => {
         onError(error.detail)
       }
 
-      eventHandlersRef.current = { onStateUpdate, onErrorEvent }
+      eventHandlersRef.current = {
+        onStreamStateUpdate,
+        onSessionStateUpdate,
+        onErrorEvent,
+      }
 
       streamingClientRef.current.addEventListener(
         "streamStateUpdated",
-        onStateUpdate,
+        onStreamStateUpdate,
+      )
+      streamingClientRef.current.addEventListener(
+        "sessionStateUpdated",
+        onSessionStateUpdate,
       )
       streamingClientRef.current.addEventListener("error", onErrorEvent)
 
@@ -132,16 +152,22 @@ export function usePixelStreaming({
     }
 
     if (eventHandlersRef.current) {
-      const { onStateUpdate, onErrorEvent } = eventHandlersRef.current
+      const { onStreamStateUpdate, onSessionStateUpdate, onErrorEvent } =
+        eventHandlersRef.current
       streamingClientRef.current.removeEventListener(
         "streamStateUpdated",
-        onStateUpdate,
+        onStreamStateUpdate,
+      )
+      streamingClientRef.current.removeEventListener(
+        "sessionStateUpdated",
+        onSessionStateUpdate,
       )
       streamingClientRef.current.removeEventListener("error", onErrorEvent)
     }
 
     streamingClientRef.current.stop()
     setStreamState(StreamState.Idle)
+    setSessionState(undefined)
   }, [])
 
   const getBrowserSupport = useCallback(() => {
@@ -152,6 +178,7 @@ export function usePixelStreaming({
 
   return {
     streamState,
+    sessionState,
     startStreaming,
     stopStreaming,
     getBrowserSupport,
