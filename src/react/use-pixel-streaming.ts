@@ -5,19 +5,19 @@ import type {
   ClientOptions,
   SessionStateUpdatedEvent,
   StreamingClientErrorEvent,
+  TargetOpts,
 } from "../client"
 import {
   StreamProvider,
   StreamState,
   type StreamStateUpdatedEvent,
-  StreamTarget,
   StreamingClient,
   StreamingClientError,
 } from "../client"
 import type { GeforceStreamConfig, SessionState } from "../session"
 
 type StartStreamingParams = Readonly<{
-  ref: HTMLElement
+  streamTarget: TargetOpts
   onError?: (error: Error) => void
 }>
 
@@ -75,7 +75,7 @@ export function usePixelStreaming({
   }, [organizationId, authToken, clientOptions])
 
   const startStreaming = useCallback(
-    async ({ ref, onError = () => {} }: StartStreamingParams) => {
+    async ({ streamTarget, onError = () => {} }: StartStreamingParams) => {
       if (!streamingClientRef.current) {
         return
       }
@@ -129,8 +129,7 @@ export function usePixelStreaming({
           worldId: string
         }),
         provider: StreamProvider.GeforceNow,
-        target: StreamTarget.Embedded,
-        container: ref,
+        ...streamTarget,
       })
 
       if (streamingContainerOrError instanceof StreamingClientError) {
