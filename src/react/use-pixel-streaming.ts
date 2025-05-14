@@ -30,11 +30,11 @@ type UsePixelStreamingParams = Readonly<{
 }>
 
 type UsePixelStreamingResult = {
+  browserSupport: Record<StreamProvider, boolean> | undefined
   streamState: StreamState
   sessionState: SessionState | undefined
   startStreaming: (params: StartStreamingParams) => void
   stopStreaming: () => void
-  getBrowserSupport: () => Record<StreamProvider, boolean>
 }
 
 export function usePixelStreaming({
@@ -46,6 +46,10 @@ export function usePixelStreaming({
 }: UsePixelStreamingParams): UsePixelStreamingResult {
   const [streamState, setStreamState] = useState<StreamState>(StreamState.Idle)
   const [sessionState, setSessionState] = useState<SessionState | undefined>()
+
+  const [browserSupport, setBrowserSupport] = useState<
+    Record<StreamProvider, boolean> | undefined
+  >(undefined)
 
   const streamingClientRef = useRef<StreamingClient | null>(null)
   const eventHandlersRef = useRef<{
@@ -67,6 +71,8 @@ export function usePixelStreaming({
         clientOptions ?? defaultClientOpts,
       )
     }
+
+    setBrowserSupport(streamingClientRef.current.getBrowserSupport())
 
     return () => {
       stopStreaming()
@@ -170,17 +176,11 @@ export function usePixelStreaming({
     setSessionState(undefined)
   }, [])
 
-  const getBrowserSupport = useCallback(() => {
-    return streamingClientRef.current
-      ? streamingClientRef.current.getBrowserSupport()
-      : ({} as Record<StreamProvider, boolean>)
-  }, [])
-
   return {
-    streamState,
+    browserSupport,
     sessionState,
+    streamState,
     startStreaming,
     stopStreaming,
-    getBrowserSupport,
   }
 }
