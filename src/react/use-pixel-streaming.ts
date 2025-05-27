@@ -125,7 +125,7 @@ export function usePixelStreaming({
       }
 
       if (config.config?.name !== StreamProvider.GeforceNow) {
-        onError(new Error("Unsupported provider"))
+        onError(new Error(`Unsupported provider: ${config.config?.name}`))
         return
       }
 
