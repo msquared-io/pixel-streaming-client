@@ -3,7 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import type {
   ClientOptions,
+  ProviderOpts,
   SessionStateUpdatedEvent,
+  StartOptions,
+  StartStreamConfig,
   StreamingClientErrorEvent,
   TargetOpts,
 } from "../client"
@@ -118,6 +121,12 @@ export function usePixelStreaming({
 
       if (!config) {
         onError(new Error("Failed to fetch stream config"))
+        return
+      }
+
+      if (config.config?.name !== StreamProvider.GeforceNow) {
+        onError(new Error(`Unsupported provider: ${config.config?.name}`))
+        return
       }
 
       const streamingContainerOrError = await streamingClientRef.current.start({
