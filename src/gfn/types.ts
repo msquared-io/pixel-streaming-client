@@ -28,6 +28,29 @@ export declare enum ServerType {
   SecureSignallingPassThrough = 53,
 }
 
+export declare enum TerminationErrorCode {
+  Success = 0x00f20000,
+  // Common errors returned when a stream terminates.
+  ServerDisconnectedIntended = 0x00f22320, // Game client terminated.
+  ServerDisconnectedUserIdle = 0x00f22324, // No input received from user.
+  ServerDisconnectedAnotherClient = 0x00f2232a, // User started another client.
+  ServerDisconnectedConcurrentSessionLimitExceeded = 0x00f22344, // User started another session.
+  ServerDisconnectedMultipleLogin = 0x00f22348, // User started another session.
+  ServerDisconnectedMaintenanceMode = 0x00f22349, // Service is entering maintenance.
+  ServerDisconnectedMultipleTab = 0x00f22350, // User started another session in another tab.
+  // Common errors when starting a stream.
+  NoNetwork = 0xc0f21001, // No network detected.
+  NetworkError = 0xc0f21002, // Network connection failed.
+  RequestLimitExceeded = 0xc0f2210a, // User started too many streams.
+  SessionLimitExceeded = 0xc0f2210b, // User started too many streams.
+  Maintenance = 0xc0f22118, // Service is in maintenance.
+  AppPatching = 0xc0f22129, // The application is being updated.
+  RegionBanned = 0xc0f22135, // The user is in an unsupported region.
+  GuestModeCampaignDisabled = 0xc0f22149, // The application does not support guest mode.
+  InvalidVideoElement = 0xc0f22400, // The supplied video element is invalid.
+  InvalidAudioElement = 0xc0f22401, // The supplied audio element is invalid.
+}
+
 export interface ZoneTable {
   [key: string]: Zone
 }

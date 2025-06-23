@@ -1,6 +1,6 @@
 import { invariant } from "../invariant"
 
-import type { API } from "./types"
+import { type API, TerminationErrorCode } from "./types"
 import type { ServerInfo } from "./types"
 
 export const GFN_SDK_URL =
@@ -107,10 +107,15 @@ class GFNClient {
   listen({ onTerminated, onStarted }: Callbacks) {
     globalThis.GFN.streamer.on("started", onStarted)
     globalThis.GFN.streamer.on("terminated", (e) => {
-      if (e.code) {
-        onTerminated(new GFNTerminationError(e.code, e.reason))
-      } else {
-        onTerminated()
+      switch (e.code) {
+        case TerminationErrorCode.ServerDisconnectedIntended:
+        case undefined:
+          // Normal termination, e.g. user closed the stream intentionally.
+          onTerminated()
+          break
+        default:
+          // Unexpected termination, e.g. network error.
+          onTerminated(new GFNTerminationError(e.code, e.reason))
       }
     })
   }
