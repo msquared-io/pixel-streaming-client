@@ -1,7 +1,7 @@
 import { invariant } from "../invariant"
 
 import { type API, TerminationErrorCode } from "./types"
-import type { ServerInfo, State } from "./types"
+import type { ServerInfo } from "./types"
 
 export const GFN_SDK_URL =
   "https://sdk.nvidia.com/gfn/client-sdk/1.x/gfn-client-sdk.js"

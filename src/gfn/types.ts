@@ -28,24 +28,6 @@ export declare enum ServerType {
   SecureSignallingPassThrough = 53,
 }
 
-export declare enum GFNStreamerState {
-  Unknown = 0,
-  Initializing = 1,
-  Connecting = 2,
-  Streaming = 3,
-  Pausing = 4,
-  Paused = 5,
-  Resuming = 6,
-  Finished = 7,
-}
-
-export declare enum GFNDiagnosticLevel {
-  Debug = 0,
-  Info = 1,
-  Warning = 2,
-  Error = 3,
-}
-
 export declare enum TerminationErrorCode {
   Success = 0x00f20000,
   // Common errors returned when a stream terminates.
