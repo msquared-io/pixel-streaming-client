@@ -1,7 +1,7 @@
 import { invariant } from "../invariant"
 
 import { type API, TerminationErrorCode } from "./types"
-import type { ServerInfo } from "./types"
+import type { ServerInfo, State } from "./types"
 
 export const GFN_SDK_URL =
   "https://sdk.nvidia.com/gfn/client-sdk/1.x/gfn-client-sdk.js"
@@ -106,6 +106,13 @@ class GFNClient {
 
   listen({ onTerminated, onStarted }: Callbacks) {
     globalThis.GFN.streamer.on("started", onStarted)
+    globalThis.GFN.streamer.on("diagnostic", (e) => {
+      switch (e.code) {
+        case TerminationErrorCode.RequestLimitExceeded:
+        case TerminationErrorCode.SessionLimitExceeded:
+          onTerminated(new GFNTerminationError(e.code, -1, e.message))
+      }
+    })
     globalThis.GFN.streamer.on("terminated", (e) => {
       switch (e.code) {
         case TerminationErrorCode.ServerDisconnectedIntended:
