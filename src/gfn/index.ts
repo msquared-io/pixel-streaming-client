@@ -106,6 +106,13 @@ class GFNClient {
 
   listen({ onTerminated, onStarted }: Callbacks) {
     globalThis.GFN.streamer.on("started", onStarted)
+    globalThis.GFN.streamer.on("diagnostic", (e) => {
+      switch (e.code) {
+        case TerminationErrorCode.RequestLimitExceeded:
+        case TerminationErrorCode.SessionLimitExceeded:
+          onTerminated(new GFNTerminationError(e.code, -1, e.message))
+      }
+    })
     globalThis.GFN.streamer.on("terminated", (e) => {
       switch (e.code) {
         case TerminationErrorCode.ServerDisconnectedIntended:

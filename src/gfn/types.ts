@@ -120,6 +120,14 @@ export declare class API {
         event: "terminated",
         callback: (e: { reason: number; code?: number }) => void,
       ): void
+      (
+        event: "diagnostic",
+        callback: (e: {
+          level?: number
+          code?: number
+          message?: string
+        }) => void,
+      ): void
     }
   }
   initialize(settings: Settings): Promise<void>
