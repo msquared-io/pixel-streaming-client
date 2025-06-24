@@ -28,7 +28,7 @@ export declare enum ServerType {
   SecureSignallingPassThrough = 53,
 }
 
-export declare enum TerminationErrorCode {
+export enum TerminationErrorCode {
   Success = 0x00f20000,
   // Common errors returned when a stream terminates.
   ServerDisconnectedIntended = 0x00f22320, // Game client terminated.
