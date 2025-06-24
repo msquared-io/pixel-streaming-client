@@ -1,6 +1,6 @@
 {
   "name": "@msquared/pixel-streaming-client",
-  "version": "0.7.1",
+  "version": "0.8.2",
   "description": "Browser client for viewing pixel-streamed content from MSquared events",
   "homepage": "https://github.com/msquared-io/pixel-streaming-client",
   "license": "MIT",
