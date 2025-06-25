@@ -19,7 +19,7 @@ import {
 } from "../client"
 import type { GeforceStreamConfig, SessionState } from "../session"
 
-type StartStreamingParams = Readonly<{
+export type StartStreamingParams = Readonly<{
   streamTarget: TargetOpts
   onError?: (error: Error) => void
 }>
@@ -32,7 +32,7 @@ type UsePixelStreamingParams = Readonly<{
   clientOptions?: ClientOptions
 }>
 
-type UsePixelStreamingResult = {
+export type UsePixelStreamingResult = {
   streamState: StreamState
   sessionState: SessionState | undefined
   startStreaming: (params: StartStreamingParams) => void
