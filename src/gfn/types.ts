@@ -113,6 +113,7 @@ export declare class API {
         fps: number
       }
     }) => Promise<void>
+    cancel: () => void
     stop: () => void
     on: {
       (event: "started", callback: () => void): void
