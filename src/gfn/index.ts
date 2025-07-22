@@ -75,7 +75,12 @@ class GFNClient {
       resolution.width = 1280
     }
 
-    this.player?.remove()
+    // Remove existing player element if it exists and reset the client state.
+    if (this.player) {
+      this.player?.remove()
+      this.cancel()
+    }
+
     this.player = document.createElement("div")
     this.player.setAttribute("id", GEFORCE_PLAYER_ELEMENT_ID)
     this.player.setAttribute(
@@ -98,6 +103,10 @@ class GFNClient {
     } catch (cause) {
       return new GFNClientError("failed to start stream", { cause })
     }
+  }
+
+  cancel() {
+    globalThis.GFN.streamer.cancel()
   }
 
   stop() {
