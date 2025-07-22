@@ -52,7 +52,6 @@ describe("errors.wrap", () => {
 describe("errors.as", () => {
   class CustomError extends Error {}
   class ChildError extends CustomError {}
-  class AnotherError extends Error {}
 
   it("should return the error if it matches the target type", () => {
     const error = new CustomError()
