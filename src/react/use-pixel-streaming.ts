@@ -3,19 +3,16 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import type {
   ClientOptions,
-  ProviderOpts,
   SessionStateUpdatedEvent,
-  StartOptions,
-  StartStreamConfig,
   StreamingClientErrorEvent,
   TargetOpts,
 } from "../client"
 import {
+  StreamingClient,
+  StreamingClientError,
   StreamProvider,
   StreamState,
   type StreamStateUpdatedEvent,
-  StreamingClient,
-  StreamingClientError,
 } from "../client"
 import type { GeforceStreamConfig, SessionState } from "../session"
 
@@ -57,6 +54,30 @@ export function usePixelStreaming({
     onErrorEvent: (error: StreamingClientErrorEvent) => void
   } | null>(null)
 
+  const stopStreaming = useCallback(() => {
+    if (!streamingClientRef.current) {
+      return
+    }
+
+    if (eventHandlersRef.current) {
+      const { onStreamStateUpdate, onSessionStateUpdate, onErrorEvent } =
+        eventHandlersRef.current
+      streamingClientRef.current.removeEventListener(
+        "streamStateUpdated",
+        onStreamStateUpdate,
+      )
+      streamingClientRef.current.removeEventListener(
+        "sessionStateUpdated",
+        onSessionStateUpdate,
+      )
+      streamingClientRef.current.removeEventListener("error", onErrorEvent)
+    }
+
+    streamingClientRef.current.stop()
+    setStreamState(StreamState.Idle)
+    setSessionState(undefined)
+  }, [])
+
   useEffect(() => {
     const defaultClientOpts = {
       auth: {
@@ -75,7 +96,7 @@ export function usePixelStreaming({
       stopStreaming()
       streamingClientRef.current = null
     }
-  }, [organizationId, authToken, clientOptions])
+  }, [organizationId, authToken, clientOptions, stopStreaming])
 
   const startStreaming = useCallback(
     async ({ streamTarget, onError = () => {} }: StartStreamingParams) => {
@@ -151,32 +172,8 @@ export function usePixelStreaming({
         throw streamingContainerOrError
       }
     },
-    [projectId, worldId],
+    [projectId, worldId, stopStreaming],
   )
-
-  const stopStreaming = useCallback(() => {
-    if (!streamingClientRef.current) {
-      return
-    }
-
-    if (eventHandlersRef.current) {
-      const { onStreamStateUpdate, onSessionStateUpdate, onErrorEvent } =
-        eventHandlersRef.current
-      streamingClientRef.current.removeEventListener(
-        "streamStateUpdated",
-        onStreamStateUpdate,
-      )
-      streamingClientRef.current.removeEventListener(
-        "sessionStateUpdated",
-        onSessionStateUpdate,
-      )
-      streamingClientRef.current.removeEventListener("error", onErrorEvent)
-    }
-
-    streamingClientRef.current.stop()
-    setStreamState(StreamState.Idle)
-    setSessionState(undefined)
-  }, [])
 
   const getBrowserSupport = useCallback(() => {
     return streamingClientRef.current
