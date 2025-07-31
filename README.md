@@ -35,6 +35,9 @@ This will create:
 # Install dependencies
 npm install
 
+# Install git hooks
+npm run hook
+
 # Run tests
 npm test
 
