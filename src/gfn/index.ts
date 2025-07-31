@@ -45,7 +45,9 @@ type Config = {
     catalogClientId: string
     partnerId: string
   }
+}
 
+type Auth = {
   cmsId: number
   nonce: string
 }
@@ -62,7 +64,12 @@ class GFNClient {
     readonly serverInfo: ServerInfo,
   ) {}
 
-  async start(container: HTMLElement): Promise<GFNClientError | undefined> {
+  async start(
+    container: HTMLElement,
+    auth: Auth,
+  ): Promise<GFNClientError | undefined> {
+    await globalThis.GFN.auth.loginWithNonce(auth.nonce, auth.cmsId)
+
     const token = globalThis.GFN.auth.guestUser?.idToken
     invariant(token, "guestUser ID token should exist")
 
@@ -92,7 +99,7 @@ class GFNClient {
     try {
       await globalThis.GFN.streamer.start({
         server: this.serverInfo.defaultZone.address,
-        appId: this.config.cmsId,
+        appId: auth.cmsId,
         windowElementId: GEFORCE_PLAYER_ELEMENT_ID,
         streamParams: {
           width: resolution.width,
@@ -158,7 +165,6 @@ export async function initClient(
       new globalThis.GFN.Settings(config.settings),
     )
     const server = await globalThis.GFN.server.getServerInfo()
-    await globalThis.GFN.auth.loginWithNonce(config.nonce, config.cmsId)
     globalThis.GFN.settings.vpcId = server.vpcId
 
     client = new GFNClient(config, server)
