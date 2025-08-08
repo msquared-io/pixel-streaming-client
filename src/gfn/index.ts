@@ -4,10 +4,7 @@ import { TerminationErrorCode } from "./types"
 import type { API, ServerInfo } from "./types"
 
 export const GFN_SDK_URL =
-  // v1.1.38 introduced a bug with touch controls; nVidia are providing 1.1.37 as a temporary
-  // until v1.1.39 is released at which point we can switch back to the latest version.
-  //  "https://sdk.nvidia.com/gfn/client-sdk/1.x/gfn-client-sdk.js"
-  "https://sdk.nvidia.com/gfn/client-sdk/1.1.37/gfn-client-sdk.js"
+  "https://sdk.nvidia.com/gfn/client-sdk/1.x/gfn-client-sdk.js"
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace globalThis {
