@@ -60,8 +60,10 @@ export function usePixelStreaming({
 
   useEffect(() => {
     if (streamingClientRef.current && authToken) {
+      // We're already streaming, so set token directly to avoid re-init.
       streamingClientRef.current.setAuthToken(authToken)
     } else {
+      // Not streaming yet, so just set token.
       setToken(authToken)
     }
   }, [authToken])
