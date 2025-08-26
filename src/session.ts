@@ -132,7 +132,7 @@ export class SessionClient {
    *
    * @param token A string token or a function that returns a string or a Promise resolving to a string.
    */
-  public setAuthToken(token: Token) : void {
+  public setAuthToken(token: Token): void {
     this.token = token
   }
 
