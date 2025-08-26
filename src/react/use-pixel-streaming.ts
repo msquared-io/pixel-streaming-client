@@ -57,25 +57,31 @@ export function usePixelStreaming({
     onErrorEvent: (error: StreamingClientErrorEvent) => void
   } | null>(null)
 
-  useEffect(() => {
-    const defaultClientOpts = {
-      auth: {
-        token: authToken,
-        organizationId,
-      },
-    }
+useEffect(() => {
+  if (streamingClientRef.current && authToken) {
+    streamingClientRef.current.setAuthToken(authToken)
+  }
+}, [authToken])
 
-    if (!streamingClientRef.current) {
-      streamingClientRef.current = new StreamingClient(
-        clientOptions ?? defaultClientOpts,
-      )
-    }
+useEffect(() => {
+  const defaultClientOpts = {
+    auth: {
+      token: authToken,
+      organizationId,
+    },
+  }
 
-    return () => {
-      stopStreaming()
-      streamingClientRef.current = null
-    }
-  }, [organizationId, authToken, clientOptions])
+  if (!streamingClientRef.current) {
+    streamingClientRef.current = new StreamingClient(
+      clientOptions ?? defaultClientOpts,
+    )
+  }
+
+  return () => {
+    stopStreaming()
+    streamingClientRef.current = null
+  }
+}, [organizationId, clientOptions]) // Removed authToken and organizationId from dependencies
 
   const startStreaming = useCallback(
     async ({ streamTarget, onError = () => {} }: StartStreamingParams) => {

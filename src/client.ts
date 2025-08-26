@@ -312,6 +312,10 @@ export class StreamingClient extends TypedEventTarget<StreamingClientEvents> {
     }
   }
 
+  setAuthToken(token: Token): void {
+    this.sessionClient.setAuthToken(token)
+  }
+
   async setup({
     projectId,
     worldId,

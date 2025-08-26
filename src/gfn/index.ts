@@ -113,10 +113,12 @@ class GFNClient {
   }
 
   cancel() {
+    console.trace("Cancelling GFN stream")
     globalThis.GFN.streamer.cancel()
   }
 
   stop() {
+    console.trace("Stopping GFN stream")
     globalThis.GFN.streamer.stop()
   }
 
