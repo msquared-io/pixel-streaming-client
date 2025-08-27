@@ -49,6 +49,7 @@ export function usePixelStreaming({
 }: UsePixelStreamingParams): UsePixelStreamingResult {
   const [streamState, setStreamState] = useState<StreamState>(StreamState.Idle)
   const [sessionState, setSessionState] = useState<SessionState | undefined>()
+  const [token, setToken] = useState<string>(authToken)
 
   const streamingClientRef = useRef<StreamingClient | null>(null)
   const eventHandlersRef = useRef<{
@@ -58,9 +59,19 @@ export function usePixelStreaming({
   } | null>(null)
 
   useEffect(() => {
+    if (streamingClientRef.current && authToken) {
+      // We're already streaming, so set token directly to avoid re-init.
+      streamingClientRef.current.setAuthToken(authToken)
+    } else {
+      // Not streaming yet, so just set token.
+      setToken(authToken)
+    }
+  }, [authToken])
+
+  useEffect(() => {
     const defaultClientOpts = {
       auth: {
-        token: authToken,
+        token: token,
         organizationId,
       },
     }
@@ -75,7 +86,7 @@ export function usePixelStreaming({
       stopStreaming()
       streamingClientRef.current = null
     }
-  }, [organizationId, authToken, clientOptions])
+  }, [organizationId, clientOptions, token])
 
   const startStreaming = useCallback(
     async ({ streamTarget, onError = () => {} }: StartStreamingParams) => {
