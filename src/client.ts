@@ -445,7 +445,7 @@ export class StreamingClient extends TypedEventTarget<StreamingClientEvents> {
         })
 
         const result = await gfnClient.start(element, {
-          cmsId: Number.parseInt(config.cmsId),
+          cmsId: Number.parseInt(config.cmsId, 10),
           nonce: config.nonce,
         })
         if (errors.is(result)) {

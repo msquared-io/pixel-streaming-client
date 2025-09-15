@@ -1,4 +1,4 @@
-import { Browser, OS, UA, getUserAgent } from "./ua"
+import { Browser, OS, getUserAgent } from "./ua"
 
 type Compatibility = {
   minVer: number
