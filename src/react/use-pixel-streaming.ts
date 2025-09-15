@@ -8,11 +8,11 @@ import type {
   TargetOpts,
 } from "../client"
 import {
+  StreamingClient,
+  StreamingClientError,
   StreamProvider,
   StreamState,
   type StreamStateUpdatedEvent,
-  StreamingClient,
-  StreamingClientError,
 } from "../client"
 import type { GeforceStreamConfig, SessionState } from "../session"
 

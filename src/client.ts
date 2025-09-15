@@ -1,12 +1,13 @@
 import { uuidv7 } from "uuidv7"
+
 import { getStreamCompat } from "./browser/compatibility"
 import errors from "./errors"
 import { type TypedEvent, TypedEventTarget } from "./events"
 import {
+  buildGfnUrl,
+  type GeforceStreamConfig,
   GFNClientNotInitialized,
   GFNTerminationError,
-  type GeforceStreamConfig,
-  buildGfnUrl,
   getClient,
   getOrInitClient,
 } from "./gfn"

@@ -1,8 +1,8 @@
 export * from "./client"
-export { SessionState } from "./session"
+export { usePixelStreaming } from "./react/use-pixel-streaming"
 export type {
-  StreamConfig,
   GeforceStreamConfig,
+  StreamConfig,
   UbitusStreamConfig,
 } from "./session"
-export { usePixelStreaming } from "./react/use-pixel-streaming"
+export { SessionState } from "./session"

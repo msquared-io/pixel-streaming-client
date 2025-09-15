@@ -1,7 +1,8 @@
 ignores: [
   "@types/jest",
   "@commitlint/cli",
-  "@commitlint/config-conventional"
+  "@commitlint/config-conventional",
+  "ts-jest"
 ]
 quiet: true
 
