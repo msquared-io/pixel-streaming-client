@@ -3,19 +3,16 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import type {
   ClientOptions,
-  ProviderOpts,
   SessionStateUpdatedEvent,
-  StartOptions,
-  StartStreamConfig,
   StreamingClientErrorEvent,
   TargetOpts,
 } from "../client"
 import {
+  StreamingClient,
+  StreamingClientError,
   StreamProvider,
   StreamState,
   type StreamStateUpdatedEvent,
-  StreamingClient,
-  StreamingClientError,
 } from "../client"
 import type { GeforceStreamConfig, SessionState } from "../session"
 
@@ -58,35 +55,29 @@ export function usePixelStreaming({
     onErrorEvent: (error: StreamingClientErrorEvent) => void
   } | null>(null)
 
-  useEffect(() => {
-    if (streamingClientRef.current && authToken) {
-      // We're already streaming, so set token directly to avoid re-init.
-      streamingClientRef.current.setAuthToken(authToken)
-    } else {
-      // Not streaming yet, so just set token.
-      setToken(authToken)
-    }
-  }, [authToken])
-
-  useEffect(() => {
-    const defaultClientOpts = {
-      auth: {
-        token: token,
-        organizationId,
-      },
-    }
-
+  const stopStreaming = useCallback(() => {
     if (!streamingClientRef.current) {
-      streamingClientRef.current = new StreamingClient(
-        clientOptions ?? defaultClientOpts,
-      )
+      return
     }
 
-    return () => {
-      stopStreaming()
-      streamingClientRef.current = null
+    if (eventHandlersRef.current) {
+      const { onStreamStateUpdate, onSessionStateUpdate, onErrorEvent } =
+        eventHandlersRef.current
+      streamingClientRef.current.removeEventListener(
+        "streamStateUpdated",
+        onStreamStateUpdate,
+      )
+      streamingClientRef.current.removeEventListener(
+        "sessionStateUpdated",
+        onSessionStateUpdate,
+      )
+      streamingClientRef.current.removeEventListener("error", onErrorEvent)
     }
-  }, [organizationId, clientOptions, token])
+
+    streamingClientRef.current.stop()
+    setStreamState(StreamState.Idle)
+    setSessionState(undefined)
+  }, [])
 
   const startStreaming = useCallback(
     async ({ streamTarget, onError = () => {} }: StartStreamingParams) => {
@@ -162,38 +153,44 @@ export function usePixelStreaming({
         throw streamingContainerOrError
       }
     },
-    [projectId, worldId],
+    [projectId, worldId, stopStreaming],
   )
-
-  const stopStreaming = useCallback(() => {
-    if (!streamingClientRef.current) {
-      return
-    }
-
-    if (eventHandlersRef.current) {
-      const { onStreamStateUpdate, onSessionStateUpdate, onErrorEvent } =
-        eventHandlersRef.current
-      streamingClientRef.current.removeEventListener(
-        "streamStateUpdated",
-        onStreamStateUpdate,
-      )
-      streamingClientRef.current.removeEventListener(
-        "sessionStateUpdated",
-        onSessionStateUpdate,
-      )
-      streamingClientRef.current.removeEventListener("error", onErrorEvent)
-    }
-
-    streamingClientRef.current.stop()
-    setStreamState(StreamState.Idle)
-    setSessionState(undefined)
-  }, [])
 
   const getBrowserSupport = useCallback(() => {
     return streamingClientRef.current
       ? streamingClientRef.current.getBrowserSupport()
       : ({} as Record<StreamProvider, boolean>)
   }, [])
+
+  useEffect(() => {
+    if (streamingClientRef.current && authToken) {
+      // We're already streaming, so set token directly to avoid re-init.
+      streamingClientRef.current.setAuthToken(authToken)
+    } else {
+      // Not streaming yet, so just set token.
+      setToken(authToken)
+    }
+  }, [authToken])
+
+  useEffect(() => {
+    const defaultClientOpts = {
+      auth: {
+        token: token,
+        organizationId,
+      },
+    }
+
+    if (!streamingClientRef.current) {
+      streamingClientRef.current = new StreamingClient(
+        clientOptions ?? defaultClientOpts,
+      )
+    }
+
+    return () => {
+      stopStreaming()
+      streamingClientRef.current = null
+    }
+  }, [organizationId, clientOptions, token, stopStreaming])
 
   return {
     streamState,

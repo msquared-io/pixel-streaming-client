@@ -1,12 +1,13 @@
 import { uuidv7 } from "uuidv7"
+
 import { getStreamCompat } from "./browser/compatibility"
 import errors from "./errors"
 import { type TypedEvent, TypedEventTarget } from "./events"
 import {
+  buildGfnUrl,
+  type GeforceStreamConfig,
   GFNClientNotInitialized,
   GFNTerminationError,
-  type GeforceStreamConfig,
-  buildGfnUrl,
   getClient,
   getOrInitClient,
 } from "./gfn"
@@ -445,7 +446,7 @@ export class StreamingClient extends TypedEventTarget<StreamingClientEvents> {
         })
 
         const result = await gfnClient.start(element, {
-          cmsId: Number.parseInt(config.cmsId),
+          cmsId: Number.parseInt(config.cmsId, 10),
           nonce: config.nonce,
         })
         if (errors.is(result)) {
