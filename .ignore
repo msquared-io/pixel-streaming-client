@@ -1,0 +1,3 @@
+# Files and directories to ignore during searches with ripgrep (rg).
+# This file follows the same pattern format as .gitignore.
+package-lock.json
