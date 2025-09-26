@@ -5,17 +5,15 @@ type Compatibility = {
   devices?: Set<Lowercase<string>>
 }
 
-/* TODO This doesn't look like it matches up with the supported platforms for the geforce now SDK,
- *  and it could be cleaned up to use the exported UA values directly rather than them being passed
- *  as arguments
- */
+// Follows the list of supported browsers found here https://www.nvidia.com/en-gb/geforce-now/system-reqs/#browser
 const GeforceNowBrowsers: Record<Lowercase<string>, Compatibility> = {
   chrome: { minVer: 77 },
   "chrome headless": { minVer: 77 },
   edge: { minVer: 91 },
   // version 14 is supported but 16 is required for navigator.permissions support
-  safari: { minVer: 16, devices: new Set(["ipad" as Lowercase<string>]) },
+  safari: { minVer: 16 },
   "mobile safari": { minVer: 16 },
+  "opera gx": { minVer: 117 },
 }
 
 const UbitusBrowsers: Record<Lowercase<string>, Compatibility> = {
@@ -109,7 +107,7 @@ function getOrComputeCompat() {
   return compat
 }
 
-export function getStreamCompat(skipBrowserSupportChecks = false) {
+export function getStreamCompat(skipBrowserSupportChecks = true) {
   const compat = getOrComputeCompat()
 
   if (skipBrowserSupportChecks) {
