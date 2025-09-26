@@ -14,8 +14,9 @@ const GeforceNowBrowsers: Record<Lowercase<string>, Compatibility> = {
   "chrome headless": { minVer: 77 },
   edge: { minVer: 91 },
   // version 14 is supported but 16 is required for navigator.permissions support
-  safari: { minVer: 16, devices: new Set(["ipad" as Lowercase<string>]) },
+  safari: { minVer: 16 },
   "mobile safari": { minVer: 16 },
+  "opera gx": { minVer: 117 },
 }
 
 const UbitusBrowsers: Record<Lowercase<string>, Compatibility> = {
