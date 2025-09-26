@@ -107,7 +107,7 @@ function getOrComputeCompat() {
   return compat
 }
 
-export function getStreamCompat(skipBrowserSupportChecks = false) {
+export function getStreamCompat(skipBrowserSupportChecks = true) {
   const compat = getOrComputeCompat()
 
   if (skipBrowserSupportChecks) {
