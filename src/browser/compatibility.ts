@@ -5,10 +5,7 @@ type Compatibility = {
   devices?: Set<Lowercase<string>>
 }
 
-/* TODO This doesn't look like it matches up with the supported platforms for the geforce now SDK,
- *  and it could be cleaned up to use the exported UA values directly rather than them being passed
- *  as arguments
- */
+// Follows the list of supported browsers found here https://www.nvidia.com/en-gb/geforce-now/system-reqs/#browser
 const GeforceNowBrowsers: Record<Lowercase<string>, Compatibility> = {
   chrome: { minVer: 77 },
   "chrome headless": { minVer: 77 },
