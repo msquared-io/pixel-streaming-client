@@ -5,7 +5,7 @@ import { type API, type ServerInfo, TerminationErrorCode } from "./types"
 // HACK: Temporary downgrade to 1.1.39 due to suspected tab focus issue in 1.1.40
 const DEFAULT_GFN_SDK_VERSION_NUMBER = "1.1.39"
 
-function gfnSdkUrl(versionNumber: string | undefined) {
+function getGfnScriptUrl(versionNumber: string | undefined) {
   let version = versionNumber ?? DEFAULT_GFN_SDK_VERSION_NUMBER
   return `https://sdk.nvidia.com/gfn/client-sdk/${version}/gfn-client-sdk.js`
 }
@@ -201,7 +201,7 @@ function loadGFNOnce(gfnVersionOverride: string | undefined) {
   if (!globalThis.GFN) {
     return new Promise<void>((resolve) => {
       const script = document.createElement("script")
-      script.src = gfnSdkUrl(gfnVersionOverride)
+      script.src = getGfnScriptUrl(gfnVersionOverride)
       script.addEventListener("load", function loadListener() {
         resolve()
         script.removeEventListener("load", loadListener)
