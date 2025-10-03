@@ -2,8 +2,10 @@ import { invariant } from "../invariant"
 
 import { type API, type ServerInfo, TerminationErrorCode } from "./types"
 
+// HACK: Temporary downgrade to 1.1.39 due to suspected tab focus issue in 1.1.40
 export const GFN_SDK_URL =
-  "https://sdk.nvidia.com/gfn/client-sdk/1.x/gfn-client-sdk.js"
+  "https://sdk.nvidia.com/gfn/client-sdk/1.1.39/gfn-client-sdk.js"
+//"https://sdk.nvidia.com/gfn/client-sdk/1.x/gfn-client-sdk.js"
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace globalThis {
