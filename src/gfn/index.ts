@@ -6,10 +6,8 @@ import { type API, type ServerInfo, TerminationErrorCode } from "./types"
 const DEFAULT_GFN_SDK_VERSION_NUMBER = "1.1.39"
 
 function gfnSdkUrl(versionNumber: string | undefined) {
-  if (!versionNumber) {
-    versionNumber = DEFAULT_GFN_SDK_VERSION_NUMBER
-  }
-  return `https://sdk.nvidia.com/gfn/client-sdk/${versionNumber}/gfn-client-sdk.js`
+  let version = versionNumber ?? DEFAULT_GFN_SDK_VERSION_NUMBER
+  return `https://sdk.nvidia.com/gfn/client-sdk/${version}/gfn-client-sdk.js`
 }
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
