@@ -44,6 +44,8 @@ export type GDNSettings = {
   catalogClientId: string
   /** Partner ID for service integration */
   partnerId: string
+  /** Version number for overriding the default version of GFN */
+  versionNumber?: string
 }
 
 /** Default GDN configuration settings */
