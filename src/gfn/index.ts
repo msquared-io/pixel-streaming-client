@@ -3,9 +3,12 @@ import { invariant } from "../invariant"
 import { type API, type ServerInfo, TerminationErrorCode } from "./types"
 
 // HACK: Temporary downgrade to 1.1.39 due to suspected tab focus issue in 1.1.40
-export const GFN_SDK_URL =
-  "https://sdk.nvidia.com/gfn/client-sdk/1.1.39/gfn-client-sdk.js"
-//"https://sdk.nvidia.com/gfn/client-sdk/1.x/gfn-client-sdk.js"
+const DEFAULT_GFN_SDK_VERSION_NUMBER = "1.1.39"
+
+function getGfnScriptUrl(versionNumber: string | undefined) {
+  let version = versionNumber ?? DEFAULT_GFN_SDK_VERSION_NUMBER
+  return `https://sdk.nvidia.com/gfn/client-sdk/${version}/gfn-client-sdk.js`
+}
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace globalThis {
@@ -45,6 +48,7 @@ type Config = {
     clientId: string
     catalogClientId: string
     partnerId: string
+    versionNumber?: string
   }
 }
 
@@ -159,7 +163,7 @@ export async function initClient(
     return GFNClientAlreadyInitialized
   }
 
-  await loadGFNOnce()
+  await loadGFNOnce(config.settings.versionNumber)
 
   try {
     await globalThis.GFN.initialize(
@@ -193,11 +197,11 @@ export async function getOrInitClient(
   return initClient(config)
 }
 
-function loadGFNOnce() {
+function loadGFNOnce(gfnVersionOverride: string | undefined) {
   if (!globalThis.GFN) {
     return new Promise<void>((resolve) => {
       const script = document.createElement("script")
-      script.src = GFN_SDK_URL
+      script.src = getGfnScriptUrl(gfnVersionOverride)
       script.addEventListener("load", function loadListener() {
         resolve()
         script.removeEventListener("load", loadListener)
