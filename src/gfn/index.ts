@@ -2,11 +2,10 @@ import { invariant } from "../invariant"
 
 import { type API, type ServerInfo, TerminationErrorCode } from "./types"
 
-// HACK: Temporary downgrade to 1.1.39 due to suspected tab focus issue in 1.1.40
-const DEFAULT_GFN_SDK_VERSION_NUMBER = "1.1.39"
+const DEFAULT_GFN_SDK_VERSION_NUMBER = "1.x"
 
 function getGfnScriptUrl(versionNumber: string | undefined) {
-  let version = versionNumber ?? DEFAULT_GFN_SDK_VERSION_NUMBER
+  const version = versionNumber ?? DEFAULT_GFN_SDK_VERSION_NUMBER
   return `https://sdk.nvidia.com/gfn/client-sdk/${version}/gfn-client-sdk.js`
 }
 
