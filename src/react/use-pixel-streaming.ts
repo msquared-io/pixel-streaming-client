@@ -26,7 +26,7 @@ type UsePixelStreamingParams = Readonly<{
   projectId: string
   worldId: string
   authToken: string
-  clientOptions?: ClientOptions
+  clientOptions?: Omit<ClientOptions, "auth">
 }>
 
 export type UsePixelStreamingResult = {
@@ -173,24 +173,20 @@ export function usePixelStreaming({
   }, [authToken])
 
   useEffect(() => {
-    const defaultClientOpts = {
-      auth: {
-        token: token,
-        organizationId,
-      },
-    }
-
     if (!streamingClientRef.current) {
-      streamingClientRef.current = new StreamingClient(
-        clientOptions ?? defaultClientOpts,
-      )
+      streamingClientRef.current = new StreamingClient({
+        ...clientOptions,
+        auth: { token, organizationId },
+      })
     }
+  }, [organizationId, clientOptions, token])
 
+  useEffect(() => {
     return () => {
       stopStreaming()
       streamingClientRef.current = null
     }
-  }, [organizationId, clientOptions, token, stopStreaming])
+  }, [stopStreaming])
 
   return {
     streamState,
