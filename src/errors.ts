@@ -24,9 +24,8 @@
 // biome-ignore lint/suspicious/noExplicitAny: using unknown here causes type errors at the usage site.
 type Constructor<T extends Error = Error> = new (...args: any[]) => T
 type ErrorOrConstructor<V extends Error = Error> = V | Constructor<V>
-type OutputType<T extends ErrorOrConstructor> = T extends Constructor<infer R>
-  ? R
-  : T
+type OutputType<T extends ErrorOrConstructor> =
+  T extends Constructor<infer R> ? R : T
 type OutputTypes<T extends readonly ErrorOrConstructor[]> = OutputType<
   T[number]
 >
