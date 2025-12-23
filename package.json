@@ -5,6 +5,10 @@
   "homepage": "https://github.com/msquared-io/pixel-streaming-client",
   "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/msquared-io/pixel-streaming-client.git"
+  },
   "keywords": [
     "msquared",
     "pixel-streaming"
